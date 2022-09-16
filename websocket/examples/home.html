@@ -1,0 +1,14 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <form>
+            <label for="message">Enter text:</label><br>
+            <input type="text" id="message" name="message"><br>
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+    <script>
+        const ws = new WebSocket('ws://localhost:3000/intro')//listens for all paths on port 3000
+    </script>
+</html>
