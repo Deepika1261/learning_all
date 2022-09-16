@@ -1,0 +1,34 @@
+<html>
+    <head>search website</head>
+    <body>
+        <hr>
+        <button type="button">Search 1</button>
+        <button type="button">Search 2</button>
+        <button type="button">Search 3</button>
+        <button type="button">Search 4</button>
+        <button type="button">Search 5</button>
+        <hr>
+        <div id="content" style="display: block; width: 90%; height:500px; background-color:cornsilk; margin-top: 30px; padding: 10px;"></div>
+    </body>
+    <script>
+        (function() {
+            let ws;
+
+            function init() {
+            if (ws) {
+                ws.onerror = ws.onopen = ws.onclose = null;
+                ws.close();
+            }
+
+            const ws = new WebSocket('ws://localhost:3000');
+            ws.on('open', function open() {
+            ws.send('Hello from client');
+            });
+            ws.on('message', function message(data) {
+            console.log(' client received: %s', data);
+            })
+            init();
+        }})();
+    </script>
+
+</html>
