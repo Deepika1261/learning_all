@@ -2,33 +2,76 @@
     <head>search website</head>
     <body>
         <hr>
-        <button type="button">Search 1</button>
-        <button type="button">Search 2</button>
-        <button type="button">Search 3</button>
-        <button type="button">Search 4</button>
-        <button type="button">Search 5</button>
+        <button id="btn1" type="button">Search 1</button>
+        <button id="btn2" type="button"> actual Search</button>
+        <button id="btn3" type="button">Search 3</button>
+        <button id="btn4" type="button">Search 4</button>
         <hr>
         <div id="content" style="display: block; width: 90%; height:500px; background-color:cornsilk; margin-top: 30px; padding: 10px;"></div>
     </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        (function() {
-            let ws;
+        const btn1 = document.querySelector('#btn1');
+        const btn2 = document.querySelector('#btn2'); 
+        const btn3 = document.querySelector('#btn3');
+        const btn4 = document.querySelector('#btn4');
+        const response_area = document.querySelector('#content');
 
-            function init() {
-            if (ws) {
-                ws.onerror = ws.onopen = ws.onclose = null;
-                ws.close();
-            }
+        function showResponse(content) {
+        response_area.textContent += `\n\n${content}`;
+        response_area.scrollTop = response_area.scrollHeight;
+        }
 
-            const ws = new WebSocket('ws://localhost:3000');
-            ws.on('open', function open() {
-            ws.send('Hello from client');
-            });
-            ws.on('message', function message(data) {
-            console.log(' client received: %s', data);
+        btn1.onclick = function(){
+            axios.get('https://reqres.in/api/users?page=2')
+            .then((res)=>{
+            showResponse(res.data.data[0]);
+            console.log(res.data.data);
             })
-            init();
-        }})();
-    </script>
+            .catch((err) => {
+            console.error(err);
+            })
+        }
+        btn2.onclick = function(){
+            axios.all([
+            axios.get('https://jsonplaceholder.typicode.com/posts'),
+            axios.get('https://jsonplaceholder.typicode.com/posts'),
+            axios.get('https://jsonplaceholder.typicode.com/posts'),
+            axios.get('https://jsonplaceholder.typicode.com/posts'),
+            axios.get('https://jsonplaceholder.typicode.com/posts'),
+            ]).then(axios.spread(function (res1, res2, res3, res4, res5){
+                showResponse(res1);
+                showResponse(res2);
+                showResponse(res3);
+                showResponse(res4);
+                showResponse(res5);
+                console.log(res1.data);
+            }))         
+            .catch((err)=>{
+                console.error(err); 
+            })
+        }
 
+        btn3.onclick = function(){
+            axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then((res)=>{
+            showResponse(res.data);
+            console.log("done")
+            })
+            .catch((err) => {
+            console.error(err);
+            })
+        }
+
+        btn4.onclick = function(){
+            axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then((res)=>{
+            showResponse(res.data);
+            console.log("done")
+            })
+            .catch((err) => {
+            console.error(err);
+            })
+        }
+    </script>
 </html>

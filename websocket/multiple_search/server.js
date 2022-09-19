@@ -1,15 +1,25 @@
-const express = require('express');
-const http = require('http');
-const WebSocket = require('k6/ws');
-const socket = require('k6/ws');
-const app = express();
-const port = 3000;
-const server = http.createServer(express);
-const wss = new WebSocket.Server({ server })
-const axios = require('axios').default;
-const instance = axios.create();
+const app = require("express")();
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
-wss.on('connection', function connection(ws) {
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+io.on("connection", (socket) => {
+    console.log(socket.id)
+    socket.on('primary-event', (arg1, arg2, callback)=>{
+        console.log(arg1);
+        console.log(arg2);
+        callback({
+            status:'ok'
+        }
+        );
+    });
+});
+
+httpServer.listen(3000);
+
+/*wss.on('connection', function connection(ws) {
   ws.on('message', function message(data) {
     console.log('server received: %s', data);
   });
@@ -40,4 +50,4 @@ app.get('/get4',(req,res)=>{
 
 server.listen(port, function() {
   console.log(`Server is listening on ${port}!`)
-})
+})*/
