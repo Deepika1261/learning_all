@@ -28,9 +28,10 @@
         response_area.textContent += `\n\n${content}`;
         response_area.scrollTop = response_area.scrollHeight;
         }
-        
+
         btn2.onclick = function(){
             socket.emit('start_timer','handshake')
+            test();
             axios.all([
             axios.get('https://jsonplaceholder.typicode.com/posts'),
             axios.get('https://jsonplaceholder.typicode.com/posts'),
