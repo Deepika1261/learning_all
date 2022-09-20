@@ -9,8 +9,15 @@
         <hr>
         <div id="content" style="display: block; width: 90%; height:500px; background-color:cornsilk; margin-top: 30px; padding: 10px;"></div>
     </body>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        const socket = io("http://localhost:3000");
+
+        socket.on("connect",()=>{
+            console.log("client connected")
+        })
+
         const btn1 = document.querySelector('#btn1');
         const btn2 = document.querySelector('#btn2'); 
         const btn3 = document.querySelector('#btn3');
@@ -21,18 +28,9 @@
         response_area.textContent += `\n\n${content}`;
         response_area.scrollTop = response_area.scrollHeight;
         }
-
-        btn1.onclick = function(){
-            axios.get('https://reqres.in/api/users?page=2')
-            .then((res)=>{
-            showResponse(res.data.data[0]);
-            console.log(res.data.data);
-            })
-            .catch((err) => {
-            console.error(err);
-            })
-        }
+        
         btn2.onclick = function(){
+            socket.emit('start_timer','handshake')
             axios.all([
             axios.get('https://jsonplaceholder.typicode.com/posts'),
             axios.get('https://jsonplaceholder.typicode.com/posts'),
@@ -50,27 +48,8 @@
             .catch((err)=>{
                 console.error(err); 
             })
-        }
-
-        btn3.onclick = function(){
-            axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then((res)=>{
-            showResponse(res.data);
-            console.log("done")
-            })
-            .catch((err) => {
-            console.error(err);
-            })
-        }
-
-        btn4.onclick = function(){
-            axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then((res)=>{
-            showResponse(res.data);
-            console.log("done")
-            })
-            .catch((err) => {
-            console.error(err);
+            socket.on('process_complete',()=>{
+                console.log('successful')
             })
         }
     </script>

@@ -1,9 +1,10 @@
 const app = require("express")();
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const sqlite3 = require('sqlite3')
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
+const io = new Server(httpServer, { cors:{origin:'*'} });
 
 io.on("connection", (socket) => {
     console.log(socket.id)
@@ -15,6 +16,11 @@ io.on("connection", (socket) => {
         }
         );
     });
+    socket.on('start_timer',(data)=>{
+      socket.timeout(5000).emit('process_complete',(err)=>{
+          //retrieve from database
+      })
+  })
 });
 
 httpServer.listen(3000);
