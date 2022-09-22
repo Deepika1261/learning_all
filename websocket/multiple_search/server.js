@@ -9,67 +9,112 @@ const io = new Server(httpServer, { cors:{origin:'*'} });
 
 io.on("connection", (socket) => {
     console.log(socket.id)
-    socket.on('primary-event', (arg1, arg2, callback)=>{
-        console.log(arg1);
-        console.log(arg2);
-        callback({
-            status:'ok'
-        }
-        );
-    });
-    socket.on('find_search',(query)=>{
+
+    socket.on('find_search1',(query)=>{
         datasource1(query, io);
+        socket.timeout(8000).emit('complete_results',(err)=>{
+            let sql = `SELECT ID id ,
+                        NAME name ,
+                        EMAIL email ,
+                        CITY city
+                FROM startup
+                WHERE id < ?
+                ORDER BY id`;
+            db.each(sql, [query], (err, row) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                socket.emit("resultsl", row)
+            }
+            });
+        })
+    });
+    socket.on('find_search2',(query)=>{
         datasource2(query, io);
+        socket.timeout(8000).emit('complete_results',(err)=>{
+            let sql = `SELECT ID id ,
+                        NAME name ,
+                        EMAIL email 
+                FROM professional
+                WHERE id < ?
+                ORDER BY id`;
+            db.each(sql, [query], (err, row) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                socket.emit("results2", row)
+            }
+            });
+        })
+    });
+    socket.on('find_search3',(query)=>{
         datasource3(query, io);
-        socket.timeout(8000).emit('done',(err)=>{
-            //fetch from db
+        socket.timeout(8000).emit('complete_results',(err)=>{
+            let sql = `SELECT ID id ,
+                        NAME name 
+                FROM Artist
+                WHERE id < ?
+                ORDER BY id`;
+            db.each(sql, [query], (err, row) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                socket.emit("results3", row)
+            }
+            });
         })
     });
 });
 
-function datasource1(query, io){
+async function datasource1(query, socket){
     let sql = `SELECT ID id ,
                   NAME name ,
-                  EMAIL email
-            FROM employee
+                  EMAIL email, 
+                  CITY city
+            FROM startup
             WHERE id < ?
             ORDER BY id`;
     db.each(sql, [query], (err, row) => {
         if (err) {
             throw err;
         }
-        io.emit("resutsl", row)
+        else{
+            socket.emit("resultsl", row)
+        }
+
     });
     
 }
 
-function datasource2(query, io){
+async function datasource2(query, io){
     let sql = `SELECT ID id ,
                 NAME name ,
                 EMAIL email
-            FROM employee
+            FROM professional
             WHERE id < ?
             ORDER BY id`;
     db.each(sql, [query], (err, row) => {
         if (err) {
             throw err;
         }
-        io.emit("resuts2", row)
+        io.emit("results2", row)
     });
 }
 
-function datasource3(query, io){
+async function datasource3(query, io){
     let sql = `SELECT ID id ,
-                NAME name ,
-                EMAIL email
-            FROM employee
+                NAME name 
+            FROM Artist
             WHERE id < ?
             ORDER BY id`;
     db.each(sql, [query], (err, row) => {
         if (err) {
             throw err;
         }
-        io.emit("resuts3", row)
+        io.emit("results3", row)
     });
 }
 

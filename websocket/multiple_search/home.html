@@ -3,8 +3,12 @@
     <body>
         <h1>Task: Multiple search results with check on delay</h1>
         <hr>
-        <input type="checkbox" id="box" name="Search" value="Search" onclick="provoked()"> 
-        <label><b>Search Query</b></label>
+        <input type="checkbox" id="box1" name="Search" value="Search" onclick="provoked1()"> 
+        <label><b>Search datasource 1</b></label>
+        <input type="checkbox" id="box2" name="Search" value="Search" onclick="provoked2()"> 
+        <label><b>Search datasource 2</b></label>
+        <input type="checkbox" id="box3" name="Search" value="Search" onclick="provoked3()"> 
+        <label><b>Search datasource 3</b></label>
         <hr>
         <label for="param">Want results with ID less than?</label>
         <input type="text" id="param" name="param"><br><br>
@@ -26,27 +30,36 @@
             display_res.scrollTop = display_res.scrollHeight;
         }
 
-        function provoked(){
-            socket.emit('find_search',query.value)
+        function provoked1(){
+            socket.emit('find_search1',query.value)
+        }
+        function provoked2(){
+            socket.emit('find_search2',query.value)
+        }
+        function provoked3(){
+            socket.emit('find_search3',query.value)
         }
 
-        socket.on("results1", (data)=>{
-            socket.on('done',()=>{
-                showResponse(data)
-            })
+        socket.on("resultsl", (data)=>{
+            data["datasource"] = "STARTUP";
+            const disp_data = JSON.stringify(data)
+            showResponse(disp_data)
             }
         )
         socket.on("results2", (data)=>{
-            socket.on('done',()=>{
-                showResponse(data)
-            })
+            data["datasource"] = "PROFESSIONAL";
+            const disp_data = JSON.stringify(data)
+            showResponse(disp_data)
             }
         )
-         socket.on("results3", (data)=>{
-            socket.on('done',()=>{
-                showResponse(data)
-            })
+        socket.on("results3", (data)=>{
+            data["datasource"] = "CHEF";
+            const disp_data = JSON.stringify(data)
+            showResponse(disp_data)
             }
         )
+        socket.on("complete_results",()=>{
+            console.log("done")
+        })
     </script>
 </html>
