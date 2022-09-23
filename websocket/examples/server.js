@@ -3,13 +3,16 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
+const io = new Server(httpServer, { cors:{origin:'*'} });
 
 io.on("connection", (socket) => {
     console.log(socket.id)
-    socket.on('primary-event',data =>{
-        console.log(data)
-    })
-});
+
+    socket.on('check',()=>{
+        console.log("handeled")
+    }
+    )
+})
+
 
 httpServer.listen(3000);
