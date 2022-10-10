@@ -1,0 +1,29 @@
+- kind: 2
+  language: dothttp-vscode
+  value: |-
+    @name('base')
+    GET 'http://localhost:3000'
+  outputs: []
+- kind: 2
+  language: dothttp-vscode
+  value: |-
+    @name('add todo'): "base"
+    POST '/todo'
+    json(
+        {
+            "title":"Shop",
+        }
+    )
+  outputs: []
+- kind: 2
+  language: dothttp-vscode
+  value: |-
+    @name('Toggle todo done status'): "base"
+    POST '/update_todo?id=18'
+  outputs: []
+- kind: 2
+  language: dothttp-vscode
+  value: |-
+    @name('delete todo'): "base"
+    DELETE '/todo?id=19'
+  outputs: []
