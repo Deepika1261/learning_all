@@ -2,20 +2,20 @@ const express = require('express');
 const passport = require('passport');
 var session = require('express-session')
 require("dotenv").config()
-require('./passport');
-
 const app = express();
-app.use(passport.initialize());
-app.use(passport.session());
-
-const port = process.env.PORT || 3000
-
 app.use(session({
     secret: 'secret key',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true }
   }))
+
+require('./passport');
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const port = process.env.PORT || 3000
 
 const isLoggedIn = (req, res, next) => {
     if (req.user) {
@@ -33,6 +33,7 @@ app.get("/failed", (req, res) => {
     res.send("Failed")
 })
 app.get("/success",isLoggedIn, (req, res) => {
+    console.log(req.user.email)
     res.send(`Welcome ${req.user.email}`)
 })
 
