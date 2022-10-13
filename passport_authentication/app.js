@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 var session = require('express-session')
+const logger = require('./logger/clientLog')
 require("dotenv").config()
 const app = express();
 app.use(session({
@@ -16,7 +17,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const port = process.env.PORT || 3000
-
+logger.info("information log")
+logger.warn("warning log")
+logger.error("error log")
+logger.debug("debug log")
 const isLoggedIn = (req, res, next) => {
     if (req.user) {
         next();

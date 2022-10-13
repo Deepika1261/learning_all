@@ -1,0 +1,4 @@
+{"level":"info","message":"information log","service":"user-service","timestamp":"2022-10-13T12:32:07.176Z"}
+{"level":"warn","message":"warning log","service":"user-service","timestamp":"2022-10-13T12:32:07.179Z"}
+{"level":"error","message":"error log","service":"user-service","timestamp":"2022-10-13T12:32:07.179Z"}
+{"level":"debug","message":"debug log","service":"user-service","timestamp":"2022-10-13T12:32:07.180Z"}
